@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="shortcut icon" href="/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <title>Movie Mania</title>
+  <meta name="theme-color" content="#22254b">
+
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">
+        <h1><a href="index.html">Movie Menia</a></h1>
+      </div>
+
+      <div class="menu">
+        <ul class="nav-menu">
+          <li class="navLink"><a class="active" id="home" href="index.html">Home</a></li>
+          <li class="navLink"><a class="" id="booked" href="showTickets.html">Booked Tickets</a></li>
+          <li class="formSearch">
+            <form  id="form">
+                <input type="text" placeholder="Search" id="search" class="search">
+            </form>
+          </li>  
+        </ul>
+        <div class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+
+    </nav>
+  </header>
+
+  <h1 class="head-title">Buy Tickets</h1>
+  
+  <div class="container">
+
+    <main id="movie-main">
+        
+    </main>
+  
+    <div class="booking-form">
+      <form id="form" class="form" >
+        <div class="dateTime">
+          <label for="email">Date and Time</label>
+          <input type="datetime-local" name="date" id="date" required>
+        </div>
+        <div class="Quantity">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" name="quantity" step="1" min="1" value="1" required>
+        </div>
+
+        <div class="buyBtn">
+          <button id="Buy" class="Buy">Buy</button>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+  <script>
+    document.getElementById("Buy").addEventListener("click", function(event) {
+      event.preventDefault()
+      add();
+    });
+
+    function add() {
+      var a = document.getElementById('date').value;
+      var b = document.getElementById('quantity').value;
+      if (a) {
+        if (b) {
+          myFunction(a, b);
+        } else {
+          alert("please enter number of tickets");
+        }
+
+      } else {
+        alert('Please enter date and time')
+      }
+
+    }
+  </script>
+  <script>
+    
+  const hamburger = document.querySelector(".hamburger");
+  const navMenu = document.querySelector('.nav-menu'); 
+    hamburger.addEventListener('click', () => {
+      console.log('clicked on hamburger');
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    })
+    
+    
+    document.querySelectorAll(".navLink").forEach(e => {
+      e.addEventListener("click", () => {
+        hamburger.classList.remove("active");
+        navMenu.classList.remove("active");
+      });
+    });
+    
+    const API_KEY = 'api_key=1cf50e6248dc270629e802686245c2c8';
+    const BASE_URL = 'https://api.themoviedb.org/3';
+    const API_URL = BASE_URL + '/discover/movie?sort_by=popularity.desc&' + API_KEY;
+    const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+    const searchURL = BASE_URL + '/search/movie?' + API_KEY;
+    
+    const movie = JSON.parse(localStorage.movie);
+    const main = document.getElementById('movie-main');
+    main.innerHTML = '';
+
+    const {
+      title,
+      poster_path,
+      vote_average,
+      overview,
+      id
+    } = movie;
+    const movieEl = document.createElement('div');
+    movieEl.innerHTML = `
+    <div class="movie-container">
+      
+      <div class="img-title">
+        <div class="movie-img">
+          <img src="${poster_path? IMG_URL+poster_path: "http://via.placeholder.com/1080x1580" }" alt="${title}">
+        </div>  
+        <div class="movie-title">
+          <h3 style="margin:auto,0; color:#FFD717; text-align:center;">${movie.title}</h3>
+        </div>
+      </div>  
+
+
+      <div class="movie-overview">
+          <h3>Overview</h3>
+          ${movie.overview}
+          <br/>                
+      </div>
+
+    </div>
+    
+    `
+    main.appendChild(movieEl);
+
+
+    function myFunction(a, b) {
+      if (localStorage.clickcount) {
+        for (let i = 0; i < Number(b); i++) {
+          localStorage.clickcount = Number(localStorage.clickcount) + 1;
+          localStorage.setItem(localStorage.clickcount, JSON.stringify({
+            title: title,
+            date: a
+          }));
+        }
+        alert("Ticket Buy Successfully")
+        window.location.href = 'showTickets.html';
+        
+      } else {
+        localStorage.clickcount = 1;
+        for (let i = 0; i < Number(b); i++) {
+          localStorage.setItem(localStorage.clickcount, JSON.stringify({
+            title: title,
+            date: a
+          }));
+          localStorage.clickcount = Number(localStorage.clickcount) + 1;
+
+        }
+        alert("Ticket Buy Successfully")
+        window.location.href = 'showTickets.html';
+
+      }
+
+    }
+  </script>
+  <script src="script.js"></script>
+
+</body>
+
+</html>

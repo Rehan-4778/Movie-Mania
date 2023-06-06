@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="shortcut icon" href="/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <title>Movie Mania</title>
+  <meta name="theme-color" content="#22254b">
+  <style>
+   
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">
+        <h1><a href="index.html">Movie Menia</a></h1>
+      </div>
+
+      <div class="menu">
+        <ul class="nav-menu">
+          <li class="navLink"><a class="" id="home" href="index.html">Home</a></li>
+          <li class="navLink"><a class="active" id="booked" href="showTickets.html">Booked Tickets</a></li>
+          <li class="formSearch">
+            <form  id="form">
+                <input type="text" placeholder="Search" id="search" class="search">
+            </form>
+          </li>
+        
+        </ul>
+        <div class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+
+    </nav>
+  </header>
+
+  <table id="customers">
+    <tr>
+      <th>Order #</th>
+      <th>Movie Title</th>
+      <th>Date & Time</th>
+      <th>Delete Tickets</th>
+
+    </tr>
+
+
+  </table>
+
+  <script>
+    display();
+
+    function display() {
+      for (let i = 0; i < Number(localStorage.clickcount); i++) {
+        let key = (i + 1).toString()
+        const al = localStorage.getItem(key);
+        if (al) {
+          var row = document.createElement("tr");
+          var orderNo = document.createElement("td");
+          var title = document.createElement("td");
+          var date = document.createElement("td");
+          var deleteCol = document.createElement("td");
+          var deleteBtn = document.createElement("BUTTON");
+          var textForDelete = document.createTextNode("Delete Ticket");
+          deleteBtn.appendChild(textForDelete);
+          deleteBtn.classList.add("deleteBtn");
+          deleteBtn.addEventListener('click', function(event) {
+            deleteTicket(key);
+          })
+
+          var textOrder = document.createTextNode(key);
+          var textTitle = document.createTextNode(`${JSON.parse(al).title}`);
+          var textDate = document.createTextNode(`${JSON.parse(al).date}`);
+          orderNo.appendChild(textOrder);
+          title.appendChild(textTitle);
+          date.appendChild(textDate);
+          deleteCol.appendChild(deleteBtn);
+          row.appendChild(orderNo);
+          row.appendChild(title);
+          row.appendChild(date);
+          row.appendChild(deleteCol);
+          var element = document.getElementById("customers");
+          element.appendChild(row);
+        }
+      }
+
+    }
+
+    function deleteTicket(key) {
+      localStorage.removeItem(key);
+      location.reload();
+    }
+  </script>
+
+  <script src="script.js"></script>
+
+
+</body>
+
+</html>
